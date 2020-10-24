@@ -1,0 +1,22 @@
+ssh rodger@140.120.13.242 -p 1000
+scp rodger@140.120.13.242:1000/result6 result6@local
+hadoop jar output.jar Test pm25@hadfs result8@hdfs
+
+ result6@hdfs/part-r-00000
+
+hadoop fs -cat result7@hdfs/part-r-00000
+
+ 
+hadoop jar output.jar Hw1 pm25@hadfs rhw18@hdfs  
+hadoop fs -cat rhw18@hdfs/part-r-00000
+
+
+hadoop jar output.jar Hw1 pm25@hadfs temp8 rhw22@hdfs  
+hadoop fs -cat temp2/part-r-00000
+hadoop fs -cat rhw22@hdfs/part-r-00000
+
+
+hadoop jar output.jar Hw1 pm25@hadfs temp35 rhw1927@hdfs  
+
+hadoop fs -cat temp35/part-r-00000
+hadoop fs -cat rhw1927@hdfs/part-r-00000
