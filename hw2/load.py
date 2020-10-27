@@ -6,18 +6,19 @@ Created on Sat Oct 24 22:14:19 2020
 """
 import json
 import ijson
+import io
 
 path = "./ignore/jsonJieba-tran.json";
-f = open(path, encoding="utf-8")
+f = io.open(path, encoding="utf-8")
 objects = ijson.items(f, 'item')
 
 path = 'data.txt'
 data={}
-with open(path, encoding="utf-8") as jsonFile:
+with io.open(path, encoding="utf-8") as jsonFile:
     data = json.load(jsonFile)
     
 cnt =0;
-for article in list(objects)[100000:300000]:
+for article in list(objects)[0:100]:
   cnt = cnt+1
   print(cnt)
   content = article["content"].split("/")  
@@ -60,5 +61,9 @@ for article in list(objects)[100000:300000]:
   # print(article["title"]),
   # print(article["content"])
   
-with open('data.txt', 'w', encoding='utf-8') as outfile:
-    json.dump(data, outfile, ensure_ascii=False)
+#with open('data.txt', 'w', encoding='utf-8') as outfile:
+#    json.dump(data, outfile, ensure_ascii=False)
+
+with io.open('data.txt', 'w', encoding='utf-8') as outfile:
+     outfile.write(unicode(json.dumps(data, ensure_ascii=False)))
+#    json.dump(data, outfile, ensure_ascii=False, encoding='utf-8')
