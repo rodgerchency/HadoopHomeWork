@@ -4,34 +4,58 @@ import io
 import json
 import jieba
 import jieba.posseg as pseg
+import itertools  
 
 class QARobot:
 
     def __init__(self):
-            self._data = {}
+            self._maps = ['A','B','C']
+            # self._data = {}
             jieba.set_dictionary('D:\school\HadoopHomeWork\dict.txt.big')
             path = 'data_full.txt'
             with io.open(path, encoding="utf-8") as jsonFile:
                 self._data = json.load(jsonFile)
+                self._dataKeys = self._data.keys()
+            path = 'data_Content.txt'
+            with io.open(path, encoding="utf-8") as jsonFile:
+                self._dataContent = json.load(jsonFile)
 
     def getAnswer(self, jsonQA, idx):
         # words = jieba.cut(jsonQA['Question'], cut_all = False)
-        words = pseg.cut(jsonQA['Question'])
-        # ansA = self._methodA(words, jsonQA['A'], jsonQA['B'], jsonQA['C'])
-        ansB = self._methodB(words, [jsonQA['A'], jsonQA['B'], jsonQA['C']])
-        ansC = self._methodC(words, [jsonQA['A'], jsonQA['B'], jsonQA['C']])
-        # if ansA is not None:
-        #     print(idx, '答案是', ansA)
+        words, wordsCopy = itertools.tee(pseg.cut(jsonQA['Question']))
+        
+        ansA = self._methodA(words, jsonQA['A'], jsonQA['B'], jsonQA['C'])
+        # ansB = self._methodB([jsonQA['A'], jsonQA['B'], jsonQA['C']])
+        # ansC = self._methodC(wordsCopy, [jsonQA['A'], jsonQA['B'], jsonQA['C']])
+        # ansD = self._methodD(jsonQA['Question'], [jsonQA['A'], jsonQA['B'], jsonQA['C']])
+        print('Quesion ', idx)
+        if ansA is not None:
+            return ansA
+        else:
+            ansD = self._methodD(jsonQA['Question'], [jsonQA['A'], jsonQA['B'], jsonQA['C']])
+            if ansD is not None:
+                return ansD
+            else:
+                ansC = self._methodC(wordsCopy, [jsonQA['A'], jsonQA['B'], jsonQA['C']])
+                if ansC is not None:
+                    return ansC
+                else:
+                    return 'D'
+        # if ansD is not None:
+        #     # print(idx, '答案是', ansA)
+        #     return ansD
         # # elif ansB is not None:
         # else:
-        #     print(idx, '沒有答案')
+        #     return 'D'
+        #     # print(idx, '沒有答案')
     
+        
     # 從答案和內容比較
     def _methodA(self, words, choiceA, choiceB, choiceC):
-
+        return None
         print('***_methodA***')
         for word in words:
-            print(word.word, ",", word.flag)
+            # print(word.word, ",", word.flag)
             if len(word.word) == 1:
                 continue
             if word.word == choiceA:
@@ -62,7 +86,7 @@ class QARobot:
         # print('方法A沒找到')
         return None
 
-    def _methodB(self, words, choices):
+    def _methodB(self, choices):
         
         print('***_methodB***')
         cnts = [0, 0, 0]
@@ -78,25 +102,68 @@ class QARobot:
         
         print('***_methodC***')
         cnts = [0, 0, 0]
+        lens = [1, 1, 1]
         idx = 0
         for word in words:
-            if len(word.word) > 1:
-                if word.word in self._data:
+            if len(word.word) > 1 and 'n' in word.flag:
+                if word.word in self._dataKeys:
                     idx = 0
                     for choice in choices:
-                        if choice in self._data:
-                            cnts[idx] = cnts[idx] + self.getConnection(choice, word.word)
+                        if choice in self._dataKeys:
+                             if lens[idx] == 1:
+                                lens[idx] = len(self._data[choice]['id'])
+                             cnts[idx] = cnts[idx] + (self.getConnection(choice, word.word)/lens[idx])
                         idx = idx + 1
-        print("A:", cnts[0], ",B:", cnts[1], ",C:", cnts[2])
+        ans = [cnts[0], cnts[1], cnts[2]]
+        print(ans)
+        return self._maps[ans.index(max(ans))]
+        # print("A:", cnts[0]/lens[0] , ",B:", cnts[1]/lens[1], ",C:", cnts[2]/lens[2])
+    
+    def _methodD(self, question, choices):
+        print('***_methodD***')
+        strs1= question.split('、')
+        strs2= question.split('，')
+        strs3= question.split('。')
+        idx = 0
+        for choice in choices:
+            if choice in self._dataContent:
+                # print(strs1[0])
+                # print(strs2[0])
+                # print(strs3[0])
+                if strs1[0] != '' and strs1[0] in self._dataContent[choice]['c']:
+                    print(choice, strs1[0],",",self._dataContent[choice]['c'])
+                    return self._maps[idx]
+                elif len(strs1) > 2 and strs1[1] in self._dataContent[choice]['c']:
+                    print(choice, strs1[1],",",self._dataContent[choice]['c'])
+                    return self._maps[idx]             
+                elif strs2[0] != '' and strs2[0] in self._dataContent[choice]['c']:
+                    print(choice, strs2[0],",",self._dataContent[choice]['c'])
+                    return self._maps[idx]
+                elif len(strs2) > 2 and strs2[1] in self._dataContent[choice]['c']:
+                    print(choice, strs2[1],",",self._dataContent[choice]['c'])
+                    return self._maps[idx]        
+                elif strs3[0] != '' and strs3[0] in self._dataContent[choice]['c']:
+                    print(choice, strs3[0],",",self._dataContent[choice]['c'])
+                    return self._maps[idx]
+                elif len(strs3) > 2 and strs3[1] in self._dataContent[choice]['c']:
+                    print(choice, strs3[0],",",self._dataContent[choice]['c'])
+                    return self._maps[idx]
+            idx = idx + 1
+        return None
+                
         
+
     def getConnection(self, choice, word):
         cnt = 0
         for id in self._data[choice]['id']:
             if id in self._data[word]['id']:
                 cnt = cnt + 1
+        # for id in choice['id']:
+        #     if id in word['id']:
+        #         cnt = cnt + 1
         return cnt
     
-
+   
 
 
 

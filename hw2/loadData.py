@@ -14,13 +14,13 @@ with open(path, encoding="utf-8") as jsonFile:
     data = json.load(jsonFile)
     
     
-pathQA = "./questions_example_wrong.json"
-dataQA={}
-with open(pathQA, encoding="utf-8") as jsonFile:
-    dataQA = json.load(jsonFile)
+# pathQA = "./questions_example_wrong.json"
+# dataQA={}
+# with open(pathQA, encoding="utf-8") as jsonFile:
+#     dataQA = json.load(jsonFile)
     
-    for d in dataQA:
-        print(d['A'] , d['A'] in data);
-        print(d['B'] , d['B'] in data);
-        print(d['C'] , d['C'] in data);
+#     for d in dataQA:
+#         print(d['A'] , d['A'] in data)
+#         print(d['B'] , d['B'] in data)
+#         print(d['C'] , d['C'] in data)
     
