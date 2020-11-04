@@ -20,15 +20,22 @@ class QARobot:
             with io.open(path, encoding="utf-8") as jsonFile:
                 self._dataContent = json.load(jsonFile)
 
+    def checkKey(self, key, dic):
+        try:
+            return dic[key]
+        except:
+            return None
+
     def getAnswer(self, jsonQA, idx):
         # words = jieba.cut(jsonQA['Question'], cut_all = False)
         words, wordsCopy = itertools.tee(pseg.cut(jsonQA['Question']))
-        
+        print('Quesion ', idx)
         ansA = self._methodA(words, jsonQA['A'], jsonQA['B'], jsonQA['C'])
         # ansB = self._methodB([jsonQA['A'], jsonQA['B'], jsonQA['C']])
         # ansC = self._methodC(wordsCopy, [jsonQA['A'], jsonQA['B'], jsonQA['C']])
         # ansD = self._methodD(jsonQA['Question'], [jsonQA['A'], jsonQA['B'], jsonQA['C']])
-        print('Quesion ', idx)
+        
+
         if ansA is not None:
             return ansA
         else:
@@ -41,6 +48,7 @@ class QARobot:
                     return ansC
                 else:
                     return 'D'
+
         # if ansD is not None:
         #     # print(idx, '答案是', ansA)
         #     return ansD
@@ -106,18 +114,20 @@ class QARobot:
         idx = 0
         for word in words:
             if len(word.word) > 1 and 'n' in word.flag:
-                if word.word in self._dataKeys:
+                wordVal = self.checkKey(word.word, self._data)
+                if wordVal is not None:
                     idx = 0
                     for choice in choices:
-                        if choice in self._dataKeys:
-                             if lens[idx] == 1:
-                                lens[idx] = len(self._data[choice]['id'])
-                             cnts[idx] = cnts[idx] + (self.getConnection(choice, word.word)/lens[idx])
+                        choiceVal = self.checkKey(choice, self._data)
+                        if choiceVal is not None:
+                            if lens[idx] == 1:
+                                lens[idx] = len(choiceVal['id'])
+                            cnts[idx] = cnts[idx] + (self.getConnection(choiceVal, wordVal)/ lens[idx])
                         idx = idx + 1
         ans = [cnts[0], cnts[1], cnts[2]]
         print(ans)
-        return self._maps[ans.index(max(ans))]
-        # print("A:", cnts[0]/lens[0] , ",B:", cnts[1]/lens[1], ",C:", cnts[2]/lens[2])
+        return self._maps[ans.index(max(ans))]       
+        
     
     def _methodD(self, question, choices):
         print('***_methodD***')
@@ -151,17 +161,16 @@ class QARobot:
             idx = idx + 1
         return None
                 
-        
-
     def getConnection(self, choice, word):
         cnt = 0
-        for id in self._data[choice]['id']:
-            if id in self._data[word]['id']:
+        for id in choice['id']:
+            val = self.checkKey(id, word['id'])
+            if val is not None:
                 cnt = cnt + 1
-        # for id in choice['id']:
-        #     if id in word['id']:
-        #         cnt = cnt + 1
-        return cnt
+            # if id in word['id']:
+            #     cnt = cnt + 1
+        return cnt    
+
     
    
 
