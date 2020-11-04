@@ -1,0 +1,6 @@
+[
+B,C,B,B,A,
+A,C,A,A,B,
+B,B,B,C,A,
+A,B,B,C,B
+]

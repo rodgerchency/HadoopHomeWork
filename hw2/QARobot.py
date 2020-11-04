@@ -45,9 +45,13 @@ class QARobot:
             else:
                 ansC = self._methodC(wordsCopy, [jsonQA['A'], jsonQA['B'], jsonQA['C']])
                 if ansC is not None:
-                    return ansC
+                    return ansC                
                 else:
-                    return 'D'
+                    ansB = self._methodB([jsonQA['A'], jsonQA['B'], jsonQA['C']])
+                    if ansB is not None:
+                        return ansB
+                    else:
+                        return 'D'
 
         # if ansD is not None:
         #     # print(idx, '答案是', ansA)
@@ -90,8 +94,6 @@ class QARobot:
             (word.word not in choiceB and choiceB not in word.word):
                 print(word.word in choiceC, ',', choiceC in word.word, ',', word.word, ',',choiceC)
                 return 'C'
-
-        # print('方法A沒找到')
         return None
 
     def _methodB(self, choices):
@@ -104,7 +106,12 @@ class QARobot:
                 cnts[idx] = self._data[choice]['cnt']
             print(idx , "cnt:", cnts[idx])
             idx = idx + 1
-        return None
+        ans = [cnts[0], cnts[1], cnts[2]]
+        print(ans)
+        if cnts[0] > 0 or cnts[1] > 0 or cnts[2] > 0:
+            return self._maps[ans.index(max(ans))]       
+        else:
+            return None
 
     def _methodC(self, words, choices):
         
@@ -113,7 +120,8 @@ class QARobot:
         lens = [1, 1, 1]
         idx = 0
         for word in words:
-            if len(word.word) > 1 and 'n' in word.flag:
+            print(word.word, ',', word.flag)
+            if len(word.word) > 1:
                 wordVal = self.checkKey(word.word, self._data)
                 if wordVal is not None:
                     idx = 0
@@ -124,9 +132,13 @@ class QARobot:
                                 lens[idx] = len(choiceVal['id'])
                             cnts[idx] = cnts[idx] + (self.getConnection(choiceVal, wordVal)/ lens[idx])
                         idx = idx + 1
+                   
         ans = [cnts[0], cnts[1], cnts[2]]
         print(ans)
-        return self._maps[ans.index(max(ans))]       
+        if cnts[0] > 0 or cnts[1] > 0 or cnts[2] > 0:
+            return self._maps[ans.index(max(ans))]       
+        else:
+            return None
         
     
     def _methodD(self, question, choices):
