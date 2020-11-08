@@ -17,14 +17,14 @@ data={}
 with io.open(path, encoding="utf-8") as jsonFile:
     data = json.load(jsonFile)
     
-cnt =0;
+cnt =0
 for article in list(objects)[0:100]:
   cnt = cnt+1
   print(cnt)
   content = article["content"].split("/")  
   for word in content:
       if word == '':
-          continue;
+          continue
       temp = word.split()
       tword = temp[0]
       if len(temp) > 1:
@@ -44,12 +44,12 @@ for article in list(objects)[0:100]:
           if article['id'] not in data[tword]['id']:
               data[tword]['id'].append(article['id']);              
       else:
-            data[tword] = {};
+            data[tword] = {}
             data[tword] = {
                 'cnt': 1,
                 'type':ttype,
                 'id' : [article['id']]
-                };
+                }
           
   # name = article['title']
   # data[name]=[]

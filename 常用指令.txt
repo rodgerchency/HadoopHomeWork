@@ -1,8 +1,11 @@
+
+https://github.com/UDICatNCHU/
+
 ssh rodger@140.120.13.242 -p 1000
 scp rodger@140.120.13.242:1000/result6 result6@local
 hadoop jar output.jar Test pm25@hadfs result8@hdfs
-
- result6@hdfs/part-r-00000
+rodger1234
+result6@hdfs/part-r-00000
 
 hadoop fs -cat result7@hdfs/part-r-00000
 

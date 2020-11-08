@@ -8,6 +8,9 @@ import json
 import ijson
 import io
 from QARobot import QARobot
+from datetime import datetime
+# print(datetime.now())
+first_time = datetime.now()
 # path = "./ignore/jsonJieba-tran.json";
 # f = io.open(path, encoding="utf-8")
 # objects = ijson.items(f, 'item')
@@ -17,15 +20,21 @@ from QARobot import QARobot
 # with io.open(path, encoding="utf-8") as jsonFile:
 #     data = json.load(jsonFile)
 
-pathQA = "./questions_example_wrong2.json"
+# pathQA = "./questions_example.json"
+pathQA = "./question_ptt.json"
 dataQA={}
 with io.open(pathQA, encoding="utf-8") as jsonFile:
     dataQA = json.load(jsonFile)
 
 robot= QARobot()
 # robot.getAnswer(dataQA[0], 0)
+answer = []
 for i in range(len(dataQA)):
-    robot.getAnswer(dataQA[i], i)
-
+    answer.append(robot.getAnswer(dataQA[i], i + 1))
+print(answer)
 # robot.getAnswer(dataQA[0],0)
-# robot.getAnswer(dataQA[1],1)
+# robot.getAnswer(dataQA[19],1)
+
+later_time = datetime.now()
+difference = later_time - first_time
+print(difference.seconds)
