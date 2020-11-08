@@ -43,12 +43,12 @@ for article in list(objects)[0:100]:
           if article['id'] not in data[tword]['id']:
               data[tword]['id'].append(article['id']);              
       else:
-            data[tword] = {};
+            data[tword] = {}
             data[tword] = {
                 'cnt': 1,
                 'type':ttype,
                 'id' : [article['id']]
-                };
+                }
           
   # name = article['title']
   # data[name]=[]

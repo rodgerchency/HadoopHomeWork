@@ -19,6 +19,10 @@ class QARobot:
             path = 'data_Content.txt'
             with io.open(path, encoding="utf-8") as jsonFile:
                 self._dataContent = json.load(jsonFile)
+            
+            path = 'dataPtt.txt'
+            with io.open(path, encoding="utf-8") as jsonFile:
+                self._dataPtt = json.load(jsonFile)
 
     def checkKey(self, key, dic):
         try:
@@ -28,6 +32,9 @@ class QARobot:
 
     def getAnswer(self, jsonQA, idx):
         # words = jieba.cut(jsonQA['Question'], cut_all = False)
+        ansE = self._methodE([jsonQA['A'], jsonQA['B'], jsonQA['C']])
+        return ansE
+
         words, wordsCopy = itertools.tee(pseg.cut(jsonQA['Question']))
         print('Quesion ', idx)
         ansA = self._methodA(words, jsonQA['A'], jsonQA['B'], jsonQA['C'])
@@ -139,8 +146,7 @@ class QARobot:
             return self._maps[ans.index(max(ans))]       
         else:
             return None
-        
-    
+   
     def _methodD(self, question, choices):
         print('***_methodD***')
         strs1= question.split('、')
@@ -181,9 +187,18 @@ class QARobot:
                 cnt = cnt + 1
             # if id in word['id']:
             #     cnt = cnt + 1
-        return cnt    
+        return cnt
 
-    
+    # Slowest
+    def _methodE(self, choices):        
+        keys = self._dataPtt.keys()
+        idx = 0
+        for choice in choices:
+            for key in list(keys):
+                if choice in self._dataPtt[key]['c']:
+                    return self._maps[idx]
+            idx = idx + 1
+        return None
    
 
 

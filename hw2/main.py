@@ -21,7 +21,7 @@ first_time = datetime.now()
 #     data = json.load(jsonFile)
 
 # pathQA = "./questions_example.json"
-pathQA = "./questions_1.json"
+pathQA = "./question_ptt.json"
 dataQA={}
 with io.open(pathQA, encoding="utf-8") as jsonFile:
     dataQA = json.load(jsonFile)
