@@ -21,18 +21,18 @@ first_time = datetime.now()
 #     data = json.load(jsonFile)
 
 # pathQA = "./questions_example.json"
-pathQA = "./question_ptt.json"
+pathQA = "./question/questions_exampleFull.json"
 dataQA={}
 with io.open(pathQA, encoding="utf-8") as jsonFile:
     dataQA = json.load(jsonFile)
 
 robot= QARobot()
-# robot.getAnswer(dataQA[0], 0)
 answer = []
 for i in range(len(dataQA)):
     answer.append(robot.getAnswer(dataQA[i], i + 1))
 print(answer)
-# robot.getAnswer(dataQA[0],0)
+
+# robot.getAnswer(dataQA[1],2)
 # robot.getAnswer(dataQA[19],1)
 
 later_time = datetime.now()
