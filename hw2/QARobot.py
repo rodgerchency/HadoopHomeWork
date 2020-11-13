@@ -32,8 +32,8 @@ class QARobot:
 
     def getAnswer(self, jsonQA, idx):
         # words = jieba.cut(jsonQA['Question'], cut_all = False)
-        ansE = self._methodE([jsonQA['A'], jsonQA['B'], jsonQA['C']])
-        return ansE
+        # ansE = self._methodE([jsonQA['A'], jsonQA['B'], jsonQA['C']])
+        # return ansE
 
         words, wordsCopy = itertools.tee(pseg.cut(jsonQA['Question']))
         print('Quesion ', idx)
@@ -42,7 +42,6 @@ class QARobot:
         # ansC = self._methodC(wordsCopy, [jsonQA['A'], jsonQA['B'], jsonQA['C']])
         # ansD = self._methodD(jsonQA['Question'], [jsonQA['A'], jsonQA['B'], jsonQA['C']])
         
-
         if ansA is not None:
             return ansA
         else:
@@ -71,10 +70,9 @@ class QARobot:
         
     # 從答案和內容比較
     def _methodA(self, words, choiceA, choiceB, choiceC):
-        return None
         print('***_methodA***')
         for word in words:
-            # print(word.word, ",", word.flag)
+            print(word.word, ",", word.flag)
             if len(word.word) == 1:
                 continue
             if word.word == choiceA:
@@ -89,17 +87,17 @@ class QARobot:
             elif (word.word in choiceA or choiceA in word.word) and \
             (word.word not in choiceB and choiceB not in word.word) and\
             (word.word not in choiceC and choiceC not in word.word):
-                print(word.word in choiceA, ',', choiceA in word.word, ',', word.word, ',',choiceA)
+                # print(word.word in choiceA, ',', choiceA in word.word, ',', word.word, ',',choiceA)
                 return 'A'
             elif (word.word in choiceB or choiceB in word.word) and \
             (word.word not in choiceA and choiceA not in word) and\
             (word.word not in choiceC and choiceC not in word.word):
-                print(word.word in choiceB, ',', choiceB in word.word, ',', word.word, ',',choiceB)
+                # print(word.word in choiceB, ',', choiceB in word.word, ',', word.word, ',',choiceB)
                 return 'B'
             elif (word.word in choiceC or choiceC in word.word) and \
             (word.word not in choiceA and choiceA not in word.word) and\
             (word.word not in choiceB and choiceB not in word.word):
-                print(word.word in choiceC, ',', choiceC in word.word, ',', word.word, ',',choiceC)
+                # print(word.word in choiceC, ',', choiceC in word.word, ',', word.word, ',',choiceC)
                 return 'C'
         return None
 
