@@ -44,10 +44,11 @@ def getContent(idx):
 
     
 cnt = 0
-while(cnt < 876236):
+while(cnt < 876240):
     key = getContent(cnt)
     if key is not None:
-        data[key] = cnt
+        newKey = key.replace('·','');
+        data[newKey] = cnt
     cnt = cnt + 1
     
     
