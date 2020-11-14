@@ -9,11 +9,11 @@ import json
 import ijson
 import re
 
-path = "./ignore/jsonJieba-tran.json";
+path = "../ignore/jsonJieba-tran.json";
 f = open(path, encoding="utf-8")
 objects = ijson.items(f, 'item')
 
-path = 'data.txt'
+path = '../data/data.txt'
 data={}
 with open(path, encoding="utf-8") as jsonFile:
     data = json.load(jsonFile)
@@ -41,7 +41,7 @@ def clearWord(word, keyWord):
     # return word
 
 cnt =0
-for article in list(objects):
+for article in list(objects)[800000:]:
   cnt = cnt+1
   # print(article["content"])
   
@@ -54,8 +54,8 @@ for article in list(objects):
       temp = word.split()
       textContent = textContent + temp[0]      
       textContent = clearWord(textContent, article['title'])
-      if len(textContent) >= 100:
-          break  
+      # if len(textContent) >= 100:
+      #     break  
   if article['title'] not in data:
     data[article['title']] = {}
     data[article['title']] ={
@@ -65,5 +65,5 @@ for article in list(objects):
       print(article['title'] + " has exist")
   
   
-with open('data.txt', 'w', encoding='utf-8') as outfile:
+with open(path, 'w', encoding='utf-8') as outfile:
     json.dump(data, outfile, ensure_ascii=False)
