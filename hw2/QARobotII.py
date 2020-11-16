@@ -119,6 +119,11 @@ class QARobotII:
         words = list(rmsw(question, flag=True))
         choices = [jsonQA['A'], jsonQA['B'], jsonQA['C']]
         choices = self.clearSelect(choices)
+        ansMethodA = self._methodA(question, jsonQA['A'], jsonQA['B'], jsonQA['C'])
+        if ansMethodA is not None:
+            print('solve by methodA')
+            print(question)
+            return ansMethodA
         cnts = [0, 0, 0]
         idx = 0
         for word in words:
@@ -131,7 +136,7 @@ class QARobotII:
                 print(word[0], '在字典裡')
                 idx = 0
                 for choice in choices:
-                    # print(choice , ',', choice in val['c'])
+                    print(choice , ',', choice in val['c'])
                     if choice in val['c']:
                         cnts[idx] = cnts[idx] + val['c'].count(choice)
                         # cnts[idx] = cnts[idx] + 1 
@@ -173,9 +178,54 @@ class QARobotII:
                         print(idx, ',', choice)
                         return self._maps[idx]
                 idx = idx + 1
+            # ansA = self._methodA(words, jsonQA['A'], jsonQA['B'], jsonQA['C'])
+            # if ansA is not None:
+            #     return ansA
             
-            return None;
-        
+            # return self._maps(ansFinal.index(max(ansFinal)))
+            return None
+            
+    # 從答案和內容比較
+    def _methodA(self, question, choiceA, choiceB, choiceC):
+        print('***_methodA***')
+        if choiceA in question and choiceB not in question and choiceC not in question:
+            print(question)
+            print(choiceA)
+            return 'A'
+        elif choiceB in question and choiceA not in question and choiceC not in question:
+            return 'B'
+        elif choiceC in question and choiceB not in question and choiceA not in question:
+            return 'C'
+        # for word in words:
+        #     print(word[0], ",", word[1])
+            # if len(word[0]) == 1:
+            #     continue
+            # if word[0] == choiceA:
+            #     # print('找到',word,'和',choiceA,'相等')
+            #     return 'A'
+            # elif word[0] == choiceB:
+            #     # print('找到',word,'和',choiceB,'相等')
+            #     return 'B'
+            # elif word[0] == choiceC:
+            #     # print('找到',word,'和',choiceC,'相等')
+            #     return 'C'
+            # elif (word[0] in choiceA or choiceA in word[0]) and \
+            # (word[0] not in choiceB and choiceB not in word[0]) and\
+            # (word[0] not in choiceC and choiceC not in word[0]):
+            #     # print(word[0] in choiceA, ',', choiceA in word[0], ',', word[0], ',',choiceA)
+            #     return 'A'
+            # elif (word[0] in choiceB or choiceB in word[0]) and \
+            # (word[0] not in choiceA and choiceA not in word) and\
+            # (word[0] not in choiceC and choiceC not in word[0]):
+            #     # print(word[0] in choiceB, ',', choiceB in word[0], ',', word[0], ',',choiceB)
+            #     return 'B'
+            # elif (word[0] in choiceC or choiceC in word[0]) and \
+            # (word[0] not in choiceA and choiceA not in word[0]) and\
+            # (word[0] not in choiceB and choiceB not in word[0]):
+            #     # print(word[0] in choiceC, ',', choiceC in word[0], ',', word[0], ',',choiceC)
+            #     return 'C'
+        return None
+
 
     def askQuestion(self, dataQA):
         cnt = 0
