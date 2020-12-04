@@ -87,10 +87,10 @@ class QARobotII:
         else:
             return None
     def clearQuestion(self, text):
-        word = text.replace('·','');
-        word = word.replace('、','');
-        word = word.replace('，','');
-        word = word.replace('。','');
+        word = text.replace('·','')
+        word = word.replace('、','')
+        word = word.replace('，','')
+        word = word.replace('。','')
         word = word.replace('美國隊長', ' 美國隊長')
         word = word.replace('安傑薩普科夫斯基', ' 安傑薩普科夫斯基')
         word = word.replace('情境推理', ' 情境猜謎 ')
@@ -102,8 +102,8 @@ class QARobotII:
         idx = 0
         for choice in choices:
             ret[idx] = choice
-            ret[idx] = ret[idx].replace('獵魔人','獵魔士');
-            ret[idx] = ret[idx].replace('意大利','義大利');
+            ret[idx] = ret[idx].replace('獵魔人','獵魔士')
+            ret[idx] = ret[idx].replace('意大利','義大利')
             if self.checkKey(choice, self.titleMapping) is None:
                 if '系列' in choice:
                     ret[idx] = ret[idx].replace('系列', '')
@@ -122,7 +122,7 @@ class QARobotII:
         ansMethodA = self._methodA(question, jsonQA['A'], jsonQA['B'], jsonQA['C'])
         if ansMethodA is not None:
             print('solve by methodA')
-            print(question)
+            print(jsonQA['Question'])
             return ansMethodA
         cnts = [0, 0, 0]
         idx = 0
@@ -133,10 +133,10 @@ class QARobotII:
             # print(idxTitle)
             if idxTitle is not None:
                 val = self.getContexnt(idxTitle)
-                print(word[0], '在字典裡')
+                # print(word[0], '在字典裡')
                 idx = 0
                 for choice in choices:
-                    print(choice , ',', choice in val['c'])
+                    # print(choice , ',', choice in val['c'])
                     if choice in val['c']:
                         cnts[idx] = cnts[idx] + val['c'].count(choice)
                         # cnts[idx] = cnts[idx] + 1 
@@ -150,7 +150,7 @@ class QARobotII:
         idx = 0
         for choice in choices:
             idxTitle = self.checkKey(choice, self.titleMapping)
-            print(idxTitle)
+            # print(idxTitle)
             if idxTitle is not None:
                 val = self.getContexnt(idxTitle)
                 if val is not None:
@@ -175,7 +175,9 @@ class QARobotII:
             for choice in choices:
                 for key in list(keys):
                     if choice in self._dataPtt[key]['c']:
-                        print(idx, ',', choice)
+                        print('solve by ptt')
+                        print(jsonQA['Question'])
+                        # print(idx, ',', choice)
                         return self._maps[idx]
                 idx = idx + 1
             # ansA = self._methodA(words, jsonQA['A'], jsonQA['B'], jsonQA['C'])
@@ -189,8 +191,8 @@ class QARobotII:
     def _methodA(self, question, choiceA, choiceB, choiceC):
         print('***_methodA***')
         if choiceA in question and choiceB not in question and choiceC not in question:
-            print(question)
-            print(choiceA)
+            # print(question)
+            # print(choiceA)
             return 'A'
         elif choiceB in question and choiceA not in question and choiceC not in question:
             return 'B'
