@@ -8,6 +8,7 @@ import json
 import ijson
 import io
 from QARobotII import QARobotII
+from QARobotIII import QARobotIII
 from datetime import datetime
 # print(datetime.now())
 first_time = datetime.now()
@@ -20,25 +21,38 @@ first_time = datetime.now()
 # with io.open(path, encoding="utf-8") as jsonFile:
 #     data = json.load(jsonFile)
 
-# pathQA = "./questions_example.json"
 pathQA = "./question/Questions_with_Ans.json"
+# pathQA = "./question/12_Question.json"
 dataQA={}
 with io.open(pathQA, encoding="utf-8") as jsonFile:
     dataQA = json.load(jsonFile)
 
-robot = QARobotII()
+robot = QARobotIII()
+# a = robot.solveWiki(dataQA[135])
+# print(a)
+# robot.solvePTT(dataQA[199])
+
 answer = []
-for i in range(len(dataQA)):
-    answer.append(robot.solve(dataQA[i]))
+for i in range(7):
+    print('solve ', i)
+    ans = robot.solve(dataQA[i])
+    if ans is None:
+        ans = robot.solveWiki(dataQA[i])
+    answer.append(ans)
 print(answer)
 
 cnt = 0
+cntNone = 0
 for i in range(len(answer)):
     if answer[i] != dataQA[i]['Answer']:
+        if answer[i] is None:
+            cntNone = cntNone + 1            
         cnt = cnt + 1
         print(answer[i] , ' ', i, ' ', dataQA[i]['Question'])
 
+print(cntNone)
 print(cnt)
+
 # robot= QARobot()
 # answer = []
 # for i in range(len(dataQA)):
